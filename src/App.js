@@ -1,19 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+
+import TimerArea from "./components/TimerArea";
+import TimerSet from "./components/TimerSet";
 
 function App() {
+    const [counter, setCounter] = useState(0);
+    const [timers, setTimers] = useState([]);
+    const [paused, setPaused] = useState(false);
 
-  const [ hours, setHours ] = useState(0);
-  const [ minutes, setMinutes ] = useState(0);
-  const [ seconds, setSeconds ] = useState(0);
+    const startTimer = () => {
+        for (let i in timers) {
+            const id = timers[i];
+            clearInterval(id);
+        }
+        setTimers([]);
 
-  
+        setPaused(false);
 
-  return (
-    <div className="app">
-        {/* Timer Area */}
-        {/* Set Timer Area */}
-    </div>
-  );
+        const timer = setInterval(() => {
+            setCounter(prev => {
+                if (prev === 0) {
+                    // End Timer
+                    console.log("Ended at " + counter);
+                    setCounter(0);
+                    clearInterval(timer);
+                    return;
+                } else return prev - 1;
+            });
+        }, 1000);
+
+        setTimers([...timers, timer]);
+    };
+
+    const pauseTimer = () => {
+        for (let i in timers) {
+            const id = timers[i];
+            clearInterval(id);
+        }
+        setTimers([]);
+        setPaused(true);
+    };
+
+    const resetTimer = () => {
+        for (let i in timers) {
+            const id = timers[i];
+            clearInterval(id);
+        }
+        setTimers([]);
+        setCounter(0);
+        setPaused(false);
+    };
+
+    const parseTimes = () => {
+        const h = Math.floor(counter / 3600);
+        const m = Math.floor(counter / 60 - 60 * h);
+        const s = Math.floor(counter % 60);
+        return [h, m, s];
+    };
+
+    useEffect(() => {
+        console.log("Time left: ", counter);
+    }, [counter]);
+
+    return (
+        <div className="app">
+            {/* Timer Area */}
+            <TimerArea
+                hours={parseTimes()[0]}
+                minutes={parseTimes()[1]}
+                seconds={parseTimes()[2]}
+            />
+            {/* Set Timer Area */}
+            <TimerSet
+                startTimer={startTimer}
+                setCounter={setCounter}
+                pauseTimer={pauseTimer}
+                paused={paused}
+                resetTimer={resetTimer}
+            />
+        </div>
+    );
 }
 
 export default App;
