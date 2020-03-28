@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import styled from 'styled-components';
+
 import TimerArea from "./components/TimerArea";
 import TimerSet from "./components/TimerSet";
 
@@ -63,7 +65,7 @@ function App() {
     }, [counter]);
 
     return (
-        <div className="app">
+        <StyledApp className="app">
             {/* Timer Area */}
             <TimerArea
                 hours={parseTimes()[0]}
@@ -78,8 +80,19 @@ function App() {
                 paused={paused}
                 resetTimer={resetTimer}
             />
-        </div>
+        </StyledApp>
     );
 }
+
+const StyledApp = styled.div`
+  width: 300px;
+  height: 500px;
+
+  display:flex;
+  flex-direction: column;
+
+  background: linear-gradient(10deg, rgba(145, 199, 227, 1) 0%, rgba(76, 190, 249, 1) 100%);
+  box-shadow: 8px 8px 8px rgba(38,140,191, .3);
+`;
 
 export default App;

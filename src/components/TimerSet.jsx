@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
 
 export default ({ setCounter, startTimer, pauseTimer, paused, resetTimer }) => {
 
@@ -31,33 +32,94 @@ export default ({ setCounter, startTimer, pauseTimer, paused, resetTimer }) => {
         
         if(!(/[0-9]+/.test(lastChar))) setValue(`${target.name}`, value.slice(0, value.length-1));
     }
+
+    const resetTimerSet = () => {
+        setValue("hours", "");
+        setValue("minutes", "");
+        setValue("seconds", "");
+        resetTimer();
+    }
     
     return (
-        <>
+        <StyledTimerSet className='timerArea'>
             <form className='timer__set' onSubmit={handleSubmit(onSubmit)}>
                 <label htmlFor='hours' className="timer__set__section">
                     Hours
-                    <input type="text" name='hours' id='form-hours' ref={register({
-                        pattern: /[0-9]+/
-                    })} placeholder='Hours' onChange={onType} autoComplete='off' />
+                    <input type="text" name='hours' id='form-hours' ref={register} onChange={onType} autoComplete='off' />
                 </label>
                 <label htmlFor='minutes' className="timer__set__section">
                     Minutes
-                    <input type="text" name='minutes' id='form-minutes' ref={register({
-                        pattern: /[0-9]+/
-                    })} placeholder='Minutes' onChange={onType} autoComplete='off' />
+                    <input type="text" name='minutes' id='form-minutes' ref={register} onChange={onType} autoComplete='off' />
                 </label>
                 <label htmlFor='seconds' className="timer__set__section">
                     Seconds
-                    <input type="text" name='seconds' id='form-seconds' ref={register({
-                        pattern: /[0-9]+/
-                    })} placeholder='Seconds' onChange={onType} autoComplete='off' />
+                    <input type="text" name='seconds' id='form-seconds' ref={register} onChange={onType} autoComplete='off' />
                 </label>
                 <button type="submit">Set Timer</button>
                 {errors.general && <p className='error'>{errors.general.message}</p>}
             </form>
             <button type='button' onClick={() => !paused ? pauseTimer() : startTimer()}>{paused ? "Resume" : "Pause"} Timer</button>
-            <button type='button' onClick={resetTimer}>Reset Timer</button>
-        </>
+            <button type='button' onClick={resetTimerSet}>Reset Timer</button>
+        </StyledTimerSet>
     )
 }
+
+const StyledTimerSet = styled.div`
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    form {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+    label, button {
+        flex-basis: 30%;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        color: white;
+
+        input { 
+            width: 100%; 
+            height: 40px;
+            margin-bottom: 15px;
+            border: 0;
+            
+            background: #4987C4;
+            color:white;
+            font-weight: bold;
+            text-align: center;
+
+            &:active, &:focus {
+                outline: none;
+            }
+        }
+    }
+
+        button {
+            flex-grow: 1;
+            margin: 20px 0 10px;
+        }
+    }
+
+    button {
+        width: 80%;
+        background: #4987C4;
+        padding: 10px 0;
+        border: 0;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+
+        & + button {
+            margin-top: 10px;
+        }
+    }
+`;
